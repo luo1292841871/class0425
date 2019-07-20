@@ -23,7 +23,7 @@ module.exports = count;
 
 // 负责引入其他模块，使用
 // 引入模块，执行模块代码。将模块暴露的内容作为require函数返回值返回
-const module1 = require('./add.js');
+const module1 = require('./module1.js1.js');
 const module2 = require('./count.js');
 
 console.log(module1);
