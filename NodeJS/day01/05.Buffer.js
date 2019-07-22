@@ -25,7 +25,11 @@
 
 // const buf = Buffer.allocUnsafe(10); // <Buffer 00 00 00 00 00 00 00 00 b0 98>
 
-const buf = Buffer.from('尚硅谷');
+import {age} from "../../7.20（模块化）/03_ES6-Babel-Browserify/src/module2";
+
+// const buf = Buffer.from('尚硅谷');
 // buf[0] = 0b1010;
-console.log(buf);
-console.log(buf.toString());// 将buffer数据转换成字符串
+// console.log(buf);
+// console.log(buf.toString());// 将buffer数据转换成字符串
+
+
