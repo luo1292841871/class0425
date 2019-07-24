@@ -81,7 +81,13 @@ promise
       info: '可爱',
     });*/
 
+    // 查
+    // const result = await Users.find({username: /^j/});
+    // const result = await Users.findOne({username: {$in: ['jack','rose']}}, {password: 0, __v: 0, _id: 0});
 
+    // const result = await Users.updateMany({username: /^t/}, {$set: {hobby: ['唱', '跳', 'rap', '篮球']}});
+
+    const result = await Users.deleteOne({username: /^j/});
 
     console.log(result);
   })
