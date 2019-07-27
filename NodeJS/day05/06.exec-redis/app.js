@@ -8,6 +8,7 @@ const { resolve } = require('path');
 
 // 对象的解构赋值
 const { exec, escape} = require('./db/mysql');
+const { get, set } = require('./db/redis');
 
 // 创建http服务
 const server = http.createServer(async (req, res) => {
@@ -22,6 +23,18 @@ const server = http.createServer(async (req, res) => {
   // 获取cookie
   getCookies(req);
 
+  let sessionId = req.cookies.session_id;
+  let session_data = {};
+
+  if (sessionId) {
+    // 读取redis中保存的session数据
+    session_data = await get(sessionId);
+  } else {
+    // 没有session_id， 创建一个session_id
+    sessionId = `${Math.random()}_${Date.now()}`;
+  }
+  req.session = session_data;
+
   // 默认设置
   if (method === 'POST') {
 
@@ -35,7 +48,7 @@ const server = http.createServer(async (req, res) => {
          2. 用户名或密码错误，返回用户名或密码错误
       */
 
-      let { username, password } = body;
+      let { username, password } = req.body;
 
       username = escape(username);
       password = escape(password);
@@ -48,7 +61,7 @@ const server = http.createServer(async (req, res) => {
         // 找到指定用户
         // 现在去掉引号，因为防止sql注入，会将引号转义
         const sql = `select id from users where username=${username} and password=${password} limit 1`;
-        console.log(sql);// select username, password from users where username='jack'-- ' ' and password='' limit 1
+        // console.log(sql);// select username, password from users where username='jack'-- ' ' and password='' limit 1
 
         const result = await exec(sql);
         /*if (result.length) {
@@ -63,10 +76,16 @@ const server = http.createServer(async (req, res) => {
           res.end('用户名找不到');
         }*/
         if (result.length) {
+          // 将用户数据添加到session对象
+          // 存储在redis里面
+          req.session.id = result[0].id;
+          set(sessionId, req.session);
+
+          // 重定向
           res.writeHead(302, {
-            'location': 'http://localhost:3000/user.html',// 重定向的网址
+            'location': 'http://localhost:3001/user.html',// 重定向的网址
             //把cookie保存起来
-            'set-cookie': `userid=${result[0].id}; max-age=${3600*24*7};httpOnly` // 设置cookie
+            'set-cookie': `session_id=${sessionId}; max-age=${3600*24*7};httpOnly` // 设置cookie
           });
           // 找到了指定用户
           res.end();
@@ -89,7 +108,7 @@ const server = http.createServer(async (req, res) => {
       res.setHeader('Content-type', 'text/plain;charset=utf8');
 
       // 验证用户数据
-      const { username, password, rePassword, phone } = body;
+      const { username, password, rePassword, phone } = req.body;
 
       if (password !== rePassword) {
         // 返回错误提示
@@ -103,7 +122,7 @@ const server = http.createServer(async (req, res) => {
       console.log(result); // [{}]  / []
 
       if (result.length) {
-
+        // 找到了
         res.end('用户名已存在');
       } else {
         // 没找到
@@ -155,7 +174,7 @@ const server = http.createServer(async (req, res) => {
       if (!req.session.id) {
         // 说明用户没有登录过，返回登录页面
         res.writeHead(302, {
-          location: 'http://localhost:3000/login.html'
+          location: 'http://localhost:3001/login.html'
         });
         res.end();
         return;
@@ -179,9 +198,9 @@ const server = http.createServer(async (req, res) => {
 });
 
 // 监听端口号
-server.listen(3000, (err) => {
+server.listen(3001, (err) => {
   if (err) console.log(err);
-  else console.log('服务器启动成功了~ 3000');
+  else console.log('服务器启动成功了~ 3001');
 });
 
 // 获取请求体参数
@@ -196,6 +215,7 @@ function getBodyData(req) {
     req.on('end', () => {
       // 当数据全部读取完毕，就会触发当前事件
       resolve(querystring.parse(body));
+      resolve();
     })
   })
 }
