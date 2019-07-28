@@ -1,0 +1,19 @@
+{
+  "name": "express_exec",
+  "version": "1.0.0",
+  "description": "",
+  "main": "06.express2/app.js",
+  "bin": {
+    "express_exec": "www.js"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "nodemon ./bin/www.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "nodemon": "^1.19.1"
+  }
+}
