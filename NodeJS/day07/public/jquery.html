@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<button id="btn">点击发送ajax请求</button>
+
+<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+<script>
+
+  $('#btn').click(function () {
+    // 发送ajax请求
+    $.ajax({
+      method: 'GET',
+      url: 'http://localhost:3000/test',
+      data: {
+        username: 'jack',
+        password: 123
+      },
+      success: function (data) {
+        // 请求成功的回调函数
+        console.log(data);
+      },
+      error: function (error) {
+        // 请求失败的回调函数
+        console.log(error);
+      }
+    })
+  })
+</script>
+</body>
+</html>

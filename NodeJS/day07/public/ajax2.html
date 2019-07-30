@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<button id="btn">发送ajax请求</button>
+<script>
+  document.getElementById('btn').onclick = function () {
+
+    const xhr = new XMLHttpRequest();
+
+    xhr.onreadystatechange = function () {
+
+      if (xhr.readyState === 4 && xhr.status === 200) {
+        console.log(xhr.responseText)
+      }
+    };
+
+    xhr.open('GET', 'http://localhost:3000/test?username=rose&password=123&data=' + Date.now());
+
+    xhr.send();
+  }
+</script>
+</body>
+</html>

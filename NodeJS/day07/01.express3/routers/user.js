@@ -25,12 +25,13 @@ router.post('/login', async (req, res) => {
     res.send('用户名或密码错误');
   }
 });
+
 // 注册功能
 router.post('/register', async (req, res) => {
   // 1. 获取请求体参数
   let { username, password, phone } = req.body;
   // 2. 去MySQL数据库中查找用户名是否存在
-  const result = await verifyUser(username);
+  const result = await exec(sql);
 
   // 因为返回的是个数组，所以要判断result的长度
   if (result.length) {
