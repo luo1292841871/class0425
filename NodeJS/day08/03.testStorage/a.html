@@ -7,6 +7,7 @@
 <body>
 <button id="btn">按钮</button>
 <script>
+  //两个页面的通信
   let num = 1;
   document.getElementById('btn').onclick = function () {
     localStorage.setItem('id', num++);

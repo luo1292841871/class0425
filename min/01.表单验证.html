@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>表单验证</title>
+  <style>
+    *{
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    .outer{
+      width: 500px;
+      margin: 0 auto;
+      overflow: hidden;
+    }
+    #box{
+      float: left;
+      line-height: 24px;
+    }
+    #box1{
+      float: left;
+      position: relative;
+    }
+  </style>
+</head>
+<body>
+<div class="outer">
+  <ul id="box">
+    <li>用户名</li>
+    <li>密码</li>
+    <li>请再次输入密码</li>
+    <li>邮箱</li>
+    <li>手机号</li>
+    <li>颜色</li>
+    <li>车牌号</li>
+  </ul>
+  <form action="" id="box1">
+    <input type="text"> <br>
+    <input type="password"><br>
+    <input type="password"><br>
+    <input type="text"><br>
+    <input type="tel"><br>
+    <input type="color"><br>
+    <input type="text"><br>
+  </form>
+</div>
+<script>
+  var oBox1 = document.getElementById('box1');
+  var oInput = oBox1.getElementsByTagName('input');
+  var reg = {
+    reg1:/^[a-zA-Z][a-zA-Z0-9]{3, 15}$/, // 用户名验证
+    reg2:/^[a-zA-Z0-9]{4, 10}$/, // 密码验证
+    reg3:/^\w+@\w+(\.[a-zA-Z]{2, 3}){1, 2}$/, // 邮箱验证
+    reg4:/^1\d{10}$/, // 手机验证
+    reg5:/^[京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领A-Z]{1}[A-Z]{1}[A-Z0-9]{4}[A-Z0-9挂学警港澳]{1}$/ // 车牌验证
+  };
+  oBox1.onclick = function (ev) {
+    var ev = ev || window.event;
+    var target = ev.target || ev.srcElement;
+
+    if (target.nodeName == 'INPUT') {
+      target.onchange = function () {
+        newCons = this.value;
+        if (reg.reg1.test(newCons)) {
+          var newSpan = document.createElement('span');
+
+          newSpan.className = 'active';
+
+          newSpan.innerHTML = '成功';
+          newSpan.style.position = 'absolute';
+          target.appendChild(newSpan);
+        } else {
+           var newsSpan = document.createElement('span');
+          newsSpan.className = 'active';
+          newsSpan.innerHTML = '失败';
+          newsSpan.style.position = 'absolute';
+          target.appendChild(newsSpan);
+          target.style.border = '1px solid red';
+        }
+      }
+    }
+  }
+</script>
+</body>
+</html>

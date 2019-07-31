@@ -65,6 +65,7 @@
       // 获取省份
       const province = this.value;
 
+      // { province }这个是传的参数
       $.get('http://localhost:3000/city', { province }, function (result) {
         if (result.code === 0) {
 
