@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>05_components_composing</title>
+</head>
+<body>
+
+  <div id="example"></div>
+
+  <script type="text/javascript" src="../js/react.development.js"></script>
+  <script type="text/javascript" src="../js/react-dom.development.js"></script>
+  <script type="text/javascript" src="../js/prop-types.js"></script>
+  <script type="text/javascript" src="../js/babel.min.js"></script>
+  <script type="text/babel">
+    /*
+      组件化编码流程：
+        1. 拆分组件：
+          按照js功能或界面变化拆分组件
+            App 应用主组件
+            Add 添加todo组件
+            List 显示todo组件
+
+        2. 实现静态组件：基本显示效果，没有js功能
+
+        3. 实现动态组件：js功能
+          1. 要不要定义状态state?  因为用户界面有变化，所以要定义state
+          2. state要定义什么数据?  定义成数组：方便遍历展示
+          3. state定义哪个组件中?
+            - 如果状态数据只有一个组件使用，定义在这个组件中
+            - 如果状态数据有多个组件使用，定义在它们的公共父组件中
+          4. 操作state方法定义在哪？
+            state在哪里，操作数据的方法就在那里
+
+          实现步骤：
+            1. 实现数据动态展示
+            2. 实现其他功能
+     */
+
+    // 定义组件
+    class App extends React.Component {
+      state = {
+        todos: ['吃饭', '睡觉', '打豆豆']
+      };
+
+      addTodo = (todo) => {
+        // 更新状态
+        // 不应该修改之前的数据，应该创建一份新数据
+        this.setState({ // this指向当前app的实例对象，因为是箭头函数，箭头函数指向外层的this的实例对象
+          todos: [todo, ...this.state.todos]
+        })
+      };
+
+      render() {
+
+        const { todos } = this.state;
+        return <div>
+          <h1>Simple Todo List</h1>
+
+          <Add addTodo={this.addTodo} length={todos.length}/>
+          {/* 组件外向组件内传递变化数据， 以标签属性方式传递 */}
+          <List todos={todos}/>
+        </div>
+      }
+    }
+
+    class Add extends React.Component {
+      static propTypes = {
+        addTodo: PropTypes.func.isRequired,
+        length: PropTypes.number.isRequired
+      };
+
+      createRef = React.createRef();
+
+      // 收集数据，添加到下面去
+      add = () => {
+        // console.log(this);
+        const input = this.createRef.current;
+        // 获取input的value值
+        const value = input.value.trim();
+        // 如果input框里面的value为空，就直接退出
+        if (!value) return;
+        // 添加
+        this.props.addTodo(value);
+        // 清空数据
+        input.value = '';
+      };
+
+      render() {
+        // console.log(this);
+        return <div>
+          <input ref={this.createRef}/> &nbsp;
+          <button onClick={this.add}>Add #{this.props.length}</button>
+        </div>
+
+      }
+    }
+
+    class List extends React.Component {
+      static propTypes = {
+        todos: PropTypes.array.isRequired // 不要再取额外的名字，就跟上面一样就好了
+      };
+      render() {
+        return <ul>
+          {
+            this.props.todos.map((todo, index) => <li key={index}>{todo}</li>) // 读取传过来的todos属性，对它进行遍历，它会返回一个新数组，新数组的值都是一个li，里面就是我需要的值
+          }
+        </ul>
+      }
+    }
+
+    ReactDOM.render(<App />, document.getElementById('example'));
+  </script>
+</body>
+</html>

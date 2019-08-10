@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>07_component_state</title>
+</head>
+<body>
+
+<div id="example"></div>
+
+<script type="text/javascript" src="../js/react.development.js"></script>
+<script type="text/javascript" src="../js/react-dom.development.js"></script>
+<script type="text/javascript" src="../js/babel.min.js"></script>
+
+<script type="text/babel">
+  /*
+  需求: 自定义组件, 功能说明如下
+    1. 显示h2标题, 初始文本为: 你喜欢我
+    2. 点击标题更新为: 我喜欢你
+  */
+
+  /*class IsLikeMe extends React.Component {
+    constructor() {
+      super();
+      // 一.初始话state
+      this.state = {
+        stateName: true
+      }
+
+       // 在constructor中修改自定义函数this指向
+      //2. this.handleClick.bind(this),将之前的原函数this指向改成bind(this)这个this，然后生成了一个新函数，就是newFn，这个新函数的this指向才发生变化
+      //1. this.newFn这个this是实例对象，在实例对象挂载了一个方法是newFn，这个this是render和constructor共有的，它们的this都指向同一个实例对象
+      //  this.newFn = this.handleClick.bind(this);// 7.因为这个函数只会调用一次
+      this.handleClick = this.handleClick.bind(this);
+      // 8.this.handleClick这个方法就把下面的方法覆盖掉了，因为那个不会用了
+    }
+
+    handleClick() {
+      //4. 读取状态
+      const { stateName } = this.state
+      //5. 更新状态--> 会重新渲染组件
+      //6. 重新渲染组件之后，就会重新调用render方法，将render方法的值再渲染到容器上
+      this.setState({
+        stateName: !stateName
+      })
+    }
+    render() {
+      // 二.读取状态属性值
+      // const stateName = this.state.stateName;
+      const { stateName } = this.state;
+      // handleClick不能调用，如果调用了返回值就是undefined，不调用就是个函数
+      return <h1 onClick={this.handleClick}>{stateName ? '你喜欢我' : '我喜欢你'} </h1>;
+      //3. 内部做的事情，当我点击h1标签的时候，会触发这个点击事件，就会去执行handleClick这个函数，但是这个函数的this已经改了，然后再读取之前的状态，然后将之前的状态给取反更新
+    }
+  }*/
+
+
+
+  // 简写方法
+  class IsLikeMe extends React.Component {
+    state = {
+      isLikeMe: true
+    };
+
+    /*
+      组件中this指向：
+        1. 生命周期函数的this指向组件实例对象
+        2. 其他自定义函数的this默认指向undefined
+     */
+    handleClick = () => {
+      console.log(this); // 组件的实例对象
+      // 读取状态
+      const { isLikeMe } = this.state;
+      // 更新状态 --> 重新渲染组件
+      this.setState({
+        isLikeMe: !isLikeMe
+      });
+    };
+
+    render() {
+      // 读取状态属性值
+      // const isLikeMe = this.state.isLikeMe;
+      const { isLikeMe } = this.state;
+      // 绑定点击事件
+      // return <h1 onClick={() => {}}>{isLikeMe ? '你喜欢我' : '我喜欢你'}</h1>;
+      return <h1 onClick={this.handleClick}>{isLikeMe ? '你喜欢我' : '我喜欢你'}</h1>;
+    }
+  }
+
+
+
+
+  // 渲染
+  ReactDOM.render(<IsLikeMe />, document.getElementById('example'));
+</script>
+</body>
+</html>
+

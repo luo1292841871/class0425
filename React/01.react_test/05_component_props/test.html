@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>04_component_props</title>
+</head>
+<body>
+
+<div id="example1"></div>
+
+<script type="text/javascript" src="../js/react.development.js"></script>
+<script type="text/javascript" src="../js/react-dom.development.js"></script>
+<script type="text/javascript" src="../js/babel.min.js"></script>
+<script src="../js/prop-types.js"></script>
+
+<script type="text/babel">
+
+  /*
+需求: 自定义用来显示一个人员信息的组件, 效果如页面. 说明
+  1). 如果性别没有指定, 默认为男
+  2). 如果年龄没有指定, 默认为18
+  */
+
+  const person = {
+    name: 'jack',
+    age: 18,
+    sex: '男'
+  };
+
+  class Person extends React.Component {
+    /*
+      static 用来定义类的静态方法。（通过static定义的方法，是在Person类上。只有类可以使用，而实例对象用不了）
+      不通过static定义的属性和方法，就在原型上。实例对象就能使用，组件Person类不能用
+     */
+    // 对props中的属性值进行类型检查和必要性检查
+    static propTypes = {
+      name: PropTypes.string.isRequired,// 有一个属性叫name，值为string，必须传
+      age: PropTypes.number,
+      sex: PropTypes.string
+    };
+
+
+    // 给属性默认值
+    static defaultProps = {
+      name: 'rose',
+      age: 20,
+      sex: '女'
+    }
+
+    render() {
+      // 里面接收参数
+      // 还要对这些参数name, age, sex进行类型检查，所以要定义类型检查
+      const { name, age, sex } = this.props;
+
+      return <ul>
+        <li>姓名:{name}</li>
+        <li>年龄:{age}</li>
+        <li>性别:{sex}</li>
+      </ul>
+    }
+  }
+
+
+  // 渲染
+  // 通过标签属性方式，组件外向组件内传递数据 --> props方式
+  // 如果在Person里面传参了，就是传的那些，如果不传参，就是上面的给属性默认值Person.defaultProps里面的参数
+  // <Person name={person.name} age={person.age} sex={person.sex}外面传参
+  // 老方法
+/*ReactDOM.render(<Person name={person.name} age={person.age} sex={person.sex}/>, document.getElementById('example1'));*/
+
+  ReactDOM.render(<Person {...person}/>, document.getElementById('example1'));
+</script>
+</body>
+</html>
+

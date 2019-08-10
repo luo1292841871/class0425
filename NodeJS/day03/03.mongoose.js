@@ -3,11 +3,11 @@
   2. 创建集合
  */
 // 引入mongoose
-const 03 = require('mongoose');
+const mongoose = require('mongoose');
 // 1. 连接mongodb服务器 - 数据库
 const promise = new Promise((resolve, reject) => {
-  03.connect('mongodb://localhost:27017/mongoose_test',{ useNewUrlParser: true, useCreateIndex: true});
-  03.connection.once('open', (err) => {
+  mongoose.connect('mongodb://localhost:27017/mongoose_test',{ useNewUrlParser: true, useCreateIndex: true});
+  mongoose.connection.once('open', (err) => {
     if (err) reject(err);
     else {
       console.log('数据库连接成功');
@@ -22,7 +22,7 @@ promise
     // 数据库连接成功了~
     // 2. 创建集合
     // 创建约束对象：约束集合中文档字段
-    const usersSchema = new 03.Schema({
+    const usersSchema = new mongoose.Schema({
       // 约束条件
       username: {
         type: String,
@@ -35,14 +35,14 @@ promise
       },
       phone: String,
       hobby: [String], // 数组，数组里面是字符串
-      info: 03.Schema.Types.Mixed,// 任意数据类型
+      info: mongoose.Schema.Types.Mixed,// 任意数据类型
       createTime: {
         type: Date,
         default: Date.now
       }
     });
     // 创建集合
-    const Users = 03.model('users', usersSchema);
+    const Users = mongoose.model('users', usersSchema);
 
     // 创建一条文档数据
     const document = new Users({
