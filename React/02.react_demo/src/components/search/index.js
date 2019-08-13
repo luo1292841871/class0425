@@ -6,16 +6,18 @@ export default class Search extends Component{
     searchName: ''
   };
 
+  // 收集input的值
   handleChange = (e) => {
     this.setState({
-      searchN: e.target.value
+      searchName: e.target.value
     })
   };
 
   search = () => {
+    // 解构赋值
     const { searchName } = this.state;
     if (!searchName) return alert('请输入搜索名称');
-
+    // 再发布消息
     PubSub.publish('SEARCH', searchName);
   };
 
