@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<script>
+  console.log('代码开始执行了');
+
+  const promise = new Promise((resolve, reject) => {
+    // executor函数会立即调用
+    console.log('executor函数执行了');
+
+    reject(111);
+    resolve(222);
+
+  });
+
+
+  promise
+    .then(
+      (value) => {
+        console.log('成功', value);
+      },
+      (reason) => {
+        console.log('失败', reason);
+      }
+    );
+
+  console.log('全部代码执行完毕');
+</script>
+</body>
+</html>
